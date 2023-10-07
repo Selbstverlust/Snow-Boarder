@@ -7,8 +7,9 @@ public class PlayerController : MonoBehaviour {
     Rigidbody2D rb2d;
     SurfaceEffector2D surfaceEffector2D;
     private float baseSpeed;
+    bool canMove = true;
     [SerializeField] private float accelerateSpeed;
-    [SerializeField] private float torqueAmount = 1f;
+    [SerializeField] private float torqueAmount = 800f;
     void Start() {
         rb2d = GetComponent<Rigidbody2D>();
         surfaceEffector2D = FindObjectOfType<SurfaceEffector2D>();
@@ -16,8 +17,16 @@ public class PlayerController : MonoBehaviour {
     }
     void Update()
     {
+        if (canMove) {
         AcceleratePlayer();
         RotatePlayer();
+        }
+        if (Input.GetKey(KeyCode.Escape)) {
+            Application.Quit();
+        }
+    }
+    public void DisableControls() {
+        canMove = false;
     }
     private void AcceleratePlayer()
     {
@@ -35,10 +44,10 @@ public class PlayerController : MonoBehaviour {
     private void RotatePlayer()
     {
         if (Input.GetKey(KeyCode.A)) {
-            rb2d.AddTorque(torqueAmount);
+            rb2d.AddTorque(torqueAmount * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.D)) {
-            rb2d.AddTorque(-torqueAmount);
+            rb2d.AddTorque(-torqueAmount * Time.deltaTime);
         }
     }
 }
